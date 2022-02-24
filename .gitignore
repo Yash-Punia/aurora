@@ -1,0 +1,12 @@
+# Directories
+.vs/
+.vscode/
+bin*/
+logs/
+
+# Filies
+*.user
+*.DS_STORE
+*.vcxproj
+*.sln
+*Makefile
