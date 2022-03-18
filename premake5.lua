@@ -12,6 +12,12 @@ workspace "aurora"
 tdir = "bin/%{cfg.buildcfg}/%{prj.name}"
 odir = "bin-obj/%{cfg.buildcfg}/%{prj.name}"
 
+--External Dependencies
+externals = {}
+
+externals["sdl2"] = "external/sdl2"
+
+
 project "Aurora"
     location "Aurora"
     kind "StaticLib"
@@ -31,7 +37,8 @@ project "Aurora"
 
     sysincludedirs
     {
-        "%{prj.name}/include/aurora"
+        "%{prj.name}/include/aurora",
+        "%{externals.sdl2}/include"
     }
 
     flags
@@ -100,6 +107,16 @@ project "AuroraEditor"
         defines
         {
             "AURORA_PLATFORM_WINDOWS"
+        }
+
+        libdirs
+        {
+            "%{externals.sdl2}/lib"
+        }
+
+        links
+        {
+            "SDL2"
         }
 
     filter "configurations:Debug"
