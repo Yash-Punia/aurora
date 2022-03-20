@@ -3,11 +3,14 @@
 
 int main()
 {
-    std::cout<<"Aurora Engine Online!";
+    std::cout<<"Aurora Engine Online!" << std::endl;
 
-    aurora::Initialize();
-    aurora::Shutdown();
+    aurora::Engine& engine = aurora::Engine::Instance();
+      
+    engine.Run();    
 
-    system("pause");
+    std::cout<<"\n\nPress ENTER to continue...";
+    std::cin.ignore();
+
     return 0;
 }

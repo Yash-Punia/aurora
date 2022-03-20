@@ -4,11 +4,35 @@
 
 namespace aurora
 {
-    bool Initialize()
+    // public
+    Engine &Engine::Instance()
     {
-        bool ret = true;
+        if (!sInstance)
+        {
+            sInstance = new Engine();
+        }
+        return *sInstance;
+    }
 
-        if(SDL_Init(SDL_INIT_EVERYTHING) < 0) 
+    void Engine::Run()
+    {
+        if (Initialize())
+        {
+            while (mIsRunning) // Game Loop
+            {
+                mWindow.PumpEvents();
+            }
+
+            Shutdown();
+        }
+    }
+
+    // private
+    bool Engine::Initialize()
+    {
+        bool ret = false;
+
+        if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
             std::cout << "Error initializing SDL2: " << SDL_GetError() << std::endl;
         }
@@ -17,12 +41,35 @@ namespace aurora
             SDL_version version;
             SDL_VERSION(&version);
             std::cout << "SDL " << (int32_t)version.major << "." << (int32_t)version.minor << "." << (int32_t)version.patch << std::endl;
+
+            // Actually creating the window
+            if (mWindow.Create())
+            {
+                ret = true;
+                mIsRunning = true;
+            }
         }
+
+        if (!ret)
+        {
+            std::cout << "Engine Initialization failed. Shutting down." << std::endl;
+            Shutdown();
+        }
+
         return ret;
     }
 
-    void Shutdown()
+    void Engine::Shutdown()
     {
+        mWindow.Shutdown();
         SDL_Quit();
     }
+
+    // Singleton
+    Engine *Engine::sInstance = nullptr;
+
+    Engine::Engine() : mIsRunning(false)
+    {
+    }
+
 }
