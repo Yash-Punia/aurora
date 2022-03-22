@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/window.h"
+#include "managers/logmanager.h"
 
 //aurora namespace to look into it in other places
 namespace aurora
@@ -17,7 +18,11 @@ namespace aurora
     private:
         static Engine *sInstance; //Pointer to the only instance of Engine
         bool mIsRunning;
+        bool mIsInitialized;
         core::Window mWindow;
+
+        //Managers
+        managers::LogManager mLogManager;
 
         // Singleton
         Engine();

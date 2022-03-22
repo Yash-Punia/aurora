@@ -1,5 +1,8 @@
 #include <iostream>
+
 #include "engine.h"
+#include "log.h"
+
 #include "sdl2/SDL.h"
 
 namespace aurora
@@ -34,28 +37,37 @@ namespace aurora
     {
         bool ret = false;
 
-        if (SDL_Init(SDL_INIT_EVERYTHING) < 0) // Negative value in case of error
-        {
-            std::cout << "Error initializing SDL2: " << SDL_GetError() << std::endl;
-        }
-        else
-        {
-            SDL_version version;
-            SDL_VERSION(&version);
-            std::cout << "SDL " << (int32_t)version.major << "." << (int32_t)version.minor << "." << (int32_t)version.patch << std::endl;
+        AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
+        
+        if(!mIsInitialized) {
+            mLogManager.Initialize();
 
-            // Actually creating the window
-            if (mWindow.Create())
+            AURORA_TRACE("AuroraEngine v{}.{}", 0, 1);
+
+            if (SDL_Init(SDL_INIT_EVERYTHING) < 0) // Negative value in case of error
             {
-                ret = true;
-                mIsRunning = true;
+                AURORA_ERROR("Error initializing SDL2: {}", SDL_GetError());
             }
-        }
+            else
+            {
+                SDL_version version;
+                SDL_VERSION(&version);
+                AURORA_INFO("SDL v{}.{}.{}", (int32_t)version.major, (int32_t)version.minor, (int32_t)version.patch);
 
-        if (!ret)
-        {
-            std::cout << "Engine Initialization failed. Shutting down." << std::endl;
-            Shutdown();
+                // Actually creating the window
+                if (mWindow.Create())
+                {
+                    ret = true;
+                    mIsRunning = true;
+                    mIsInitialized = true;
+                }
+            }
+
+            if (!ret)
+            {
+                AURORA_ERROR("Engine Initialization failed. Shutting down. {}", SDL_GetError());
+                Shutdown();
+            }
         }
 
         return ret;
@@ -63,6 +75,14 @@ namespace aurora
 
     void Engine::Shutdown()
     {
+        mIsRunning = false;
+        mIsInitialized = false;
+
+        //Managers - usually shut down in reverse order
+        mLogManager.Shutdown();
+
+
+        //Shutdown SDL
         mWindow.Shutdown();
         SDL_Quit();
     }
@@ -70,8 +90,9 @@ namespace aurora
     // Singleton
     Engine *Engine::sInstance = nullptr;
 
-    Engine::Engine() : mIsRunning(false)
-    {
-    }
+    Engine::Engine() 
+        : mIsRunning(false),
+          mIsInitialized(false)
+    {}
 
 }
