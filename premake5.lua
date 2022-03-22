@@ -1,3 +1,5 @@
+--Working directory and starting point of program
+
 workspace "aurora"
     startproject "auroraeditor"
     architecture "x64"
@@ -8,6 +10,7 @@ workspace "aurora"
         "Release"
     }
 
+--Target and object directories
 
 tdir = "bin/%{cfg.buildcfg}/%{prj.name}"
 odir = "bin-obj/%{cfg.buildcfg}/%{prj.name}"
@@ -17,17 +20,18 @@ externals = {}
 
 externals["sdl2"] = "external/sdl2"
 
-
+--Aurora Engine as a linking library
 project "Aurora"
     location "Aurora"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "on"
+    staticruntime "on" --To link every single library statically
     
     targetdir(tdir)
     objdir(odir)
 
+    --Every single file to use is here!!
     files 
     {
         "%{prj.name}/include/**.h",
@@ -35,6 +39,7 @@ project "Aurora"
         "%{prj.name}/src/**.cpp"
     }
 
+    --To build this module, use includes
     sysincludedirs
     {
         "%{prj.name}/include/aurora",
@@ -54,6 +59,7 @@ project "Aurora"
             "AURORA_PLATFORM_WINDOWS"
         }
 
+    --Debug config generates redundant files with more info
     filter "configurations:Debug"
         defines
         {
@@ -62,6 +68,7 @@ project "Aurora"
         runtime "Debug"
         symbols "on"
 
+    --Release config generates only relevant files with optimized code
     filter "configurations:Release"
         defines
         {
@@ -72,7 +79,7 @@ project "Aurora"
         optimize "on"
 
 
-
+--Main editor application
 project "AuroraEditor"
     location "AuroraEditor"
     kind "ConsoleApp"
@@ -109,11 +116,13 @@ project "AuroraEditor"
             "AURORA_PLATFORM_WINDOWS"
         }
 
+        --To run application on windows, provides the appropriate library to support the run
         libdirs
         {
             "%{externals.sdl2}/lib"
         }
 
+        --Links the dependencies from external
         links
         {
             "SDL2"

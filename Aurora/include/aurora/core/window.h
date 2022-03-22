@@ -10,6 +10,7 @@ namespace aurora::core
         Window();
         ~Window();
 
+        // Basic operations
         bool Create();
         void Shutdown();
 

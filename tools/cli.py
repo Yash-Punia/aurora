@@ -1,3 +1,5 @@
+#Directs the argument calls to other python scripts
+
 import os, sys;
 import subprocess;
 

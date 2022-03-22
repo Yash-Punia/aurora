@@ -1,5 +1,5 @@
-#include "engine.h"
 #include <iostream>
+#include "engine.h"
 #include "sdl2/SDL.h"
 
 namespace aurora
@@ -28,11 +28,13 @@ namespace aurora
     }
 
     // private
+
+    // Cross check initialization of engine
     bool Engine::Initialize()
     {
         bool ret = false;
 
-        if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+        if (SDL_Init(SDL_INIT_EVERYTHING) < 0) // Negative value in case of error
         {
             std::cout << "Error initializing SDL2: " << SDL_GetError() << std::endl;
         }
