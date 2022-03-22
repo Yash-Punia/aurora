@@ -19,6 +19,7 @@ odir = "bin-obj/%{cfg.buildcfg}/%{prj.name}"
 externals = {}
 
 externals["sdl2"] = "external/sdl2"
+externals["spdlog"] = "external/spdlog"
 
 --Aurora Engine as a linking library
 project "Aurora"
@@ -43,7 +44,8 @@ project "Aurora"
     sysincludedirs
     {
         "%{prj.name}/include/aurora",
-        "%{externals.sdl2}/include"
+        "%{externals.sdl2}/include",
+        "%{externals.spdlog}/include"
     }
 
     flags
