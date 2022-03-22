@@ -36,7 +36,6 @@ namespace aurora
     bool Engine::Initialize()
     {
         bool ret = false;
-
         AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
         
         if(!mIsInitialized) {

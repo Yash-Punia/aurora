@@ -2,9 +2,7 @@
 #include "spdlog/spdlog.h"
 
 #define AURORA_DEFAULT_LOGGER_NAME "auroralogger" 
-#if defined(AURORA_PLATFORM_WINDOWS);
-define AURORA_BREAK __debugBreak();
-#endif
+#define AURORA_BREAK __debugbreak();
 
 #ifndef AURORA_CONFIG_RELEASE
 #define AURORA_TRACE(...)   if(spdlog::get(AURORA_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(AURORA_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}
@@ -13,7 +11,7 @@ define AURORA_BREAK __debugBreak();
 #define AURORA_WARN(...)   if(spdlog::get(AURORA_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(AURORA_DEFAULT_LOGGER_NAME)->warn(__VA_ARGS__);}
 #define AURORA_ERROR(...)   if(spdlog::get(AURORA_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(AURORA_DEFAULT_LOGGER_NAME)->error(__VA_ARGS__);}
 #define AURORA_FATAL(...)   if(spdlog::get(AURORA_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(AURORA_DEFAULT_LOGGER_NAME)->critical(__VA_ARGS__);}
-#define AURORA_ASSERT(x, msg)  if((x)) {} else { AURORA_FATAL("ASSERT - {}\n\t{}\n\tinfile: {}\n\ton line: {}", #x, msg, __FILE__, __LINE__); AURORA_BREAK()}
+#define AURORA_ASSERT(x, msg)  if((x)) {} else { AURORA_FATAL("ASSERT - {}\n\t{}\n\tinfile: {}\n\ton line: {}", #x, msg, __FILE__, __LINE__); AURORA_BREAK}
 
 // //Disable logging for different build if any
 // #else
