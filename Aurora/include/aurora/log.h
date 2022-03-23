@@ -2,7 +2,7 @@
 #include "spdlog/spdlog.h"
 
 #define AURORA_DEFAULT_LOGGER_NAME "auroralogger" 
-#define AURORA_BREAK __debugbreak();
+#define AURORA_BREAK __debugBreak();
 
 #ifndef AURORA_CONFIG_RELEASE
 #define AURORA_TRACE(...)   if(spdlog::get(AURORA_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(AURORA_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}

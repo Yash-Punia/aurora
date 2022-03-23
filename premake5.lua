@@ -20,6 +20,10 @@ externals = {}
 
 externals["sdl2"] = "external/sdl2"
 externals["spdlog"] = "external/spdlog"
+externals["glad"] = "external/glad"
+
+--Process Glad before anything else
+include "external/glad"
 
 --Aurora Engine as a linking library
 project "Aurora"
@@ -45,13 +49,20 @@ project "Aurora"
     {
         "%{prj.name}/include/aurora",
         "%{externals.sdl2}/include",
-        "%{externals.spdlog}/include"
+        "%{externals.spdlog}/include",
+        "%{externals.glad}/include"
     }
 
     flags
     {
         "FatalWarnings"
     }
+
+    defines
+    { 
+        "GLFW_INCLUDE_NONE" --Ensures that Glad doesn't include GLFW
+    }
+    
 
     filter {"system:windows", "configurations:*"}
         systemversion "latest"
@@ -77,6 +88,7 @@ project "Aurora"
             "AURORA_CONFIG_RELEASE"
         }
         runtime "Release"
+
         symbols "off"
         optimize "on"
 
@@ -127,7 +139,8 @@ project "AuroraEditor"
         --Links the dependencies from external
         links
         {
-            "SDL2"
+            "SDL2",
+            "glad"
         }
 
     filter "configurations:Debug"

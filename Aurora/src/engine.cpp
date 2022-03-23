@@ -24,6 +24,10 @@ namespace aurora
             while (mIsRunning) // Game Loop
             {
                 mWindow.PumpEvents();
+
+                // TODO: Shift to a Renderer in future
+                mWindow.BeginRender();
+                mWindow.EndRender();
             }
 
             Shutdown();
@@ -36,7 +40,7 @@ namespace aurora
     bool Engine::Initialize()
     {
         bool ret = false;
-        AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
+        // AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
         
         if(!mIsInitialized) {
             mLogManager.Initialize();
@@ -68,7 +72,7 @@ namespace aurora
                 Shutdown();
             }
         }
-
+    
         return ret;
     }
 
