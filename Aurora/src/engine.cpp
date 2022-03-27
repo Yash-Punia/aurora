@@ -3,6 +3,9 @@
 #include "engine.h"
 #include "log.h"
 
+#include "graphics/mesh.h"
+#include "graphics/shader.h"
+
 #include "sdl2/SDL.h"
 
 namespace aurora
@@ -21,12 +24,46 @@ namespace aurora
     {
         if (Initialize())
         {
+            // Test Mesh
+            float vertices[]
+            {
+                -0.5f, -0.5f, 0.f,
+                 0.f,   0.5f, 0.f,
+                 0.5f, -0.5f, 0.f
+            };
+            std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh> (&vertices[0], 3, 3);
+
+            //Test Shader
+            const char* vertexShader = R"(
+                #version 410 core
+                layout (location = 0) in vec3 position;
+                void main()
+                {
+                    gl_Position = vec4(position, 1.0);
+                }
+            )";
+
+            const char* fragmentShader = R"(
+                #version 410 core
+                out vec4 outColor;
+                void main()
+                {
+                    outColor = vec4(1.0);
+                }
+            )";
+
+            std::shared_ptr<graphics::Shader> shader = std::make_shared<graphics::Shader> (vertexShader, fragmentShader);
+
             while (mIsRunning) // Game Loop
             {
                 mWindow.PumpEvents();
 
-                // TODO: Shift to a Renderer in future
                 mWindow.BeginRender();
+
+                auto rc = std::make_unique<graphics::rendercommands::RenderMesh>(mesh, shader);
+                mRenderManager.Submit(std::move(rc));
+                mRenderManager.Flush();
+
                 mWindow.EndRender();
             }
 
@@ -60,6 +97,9 @@ namespace aurora
                 // Actually creating the window
                 if (mWindow.Create())
                 {
+                    // Initialize Managers
+                    mRenderManager.Initialize();
+
                     ret = true;
                     mIsRunning = true;
                     mIsInitialized = true;
@@ -81,9 +121,9 @@ namespace aurora
         mIsRunning = false;
         mIsInitialized = false;
 
-        //Managers - usually shut down in reverse order
+        // Shutdown Managers - usually shut down in reverse order
+        mRenderManager.Shutdown();
         mLogManager.Shutdown();
-
 
         //Shutdown SDL
         mWindow.Shutdown();
