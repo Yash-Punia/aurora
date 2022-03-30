@@ -6,6 +6,8 @@
 
 namespace aurora::managers
 {
+    RenderManager::RenderManager() {}
+    RenderManager::~RenderManager() {}
     void RenderManager::Initialize()
     {
         AURORA_INFO("OpenGL Info:\n  Vendor:\t{}\n  Renderer:\t{}\n  Version:\t{}",
@@ -34,6 +36,18 @@ namespace aurora::managers
     void RenderManager::SetClearColour(float r, float g, float b, float a)
     {
         glClearColor(r, g, b, a);
+    }
+
+    void RenderManager::SetWireFrameMode(bool enabled)
+    {
+        if(enabled)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+        else
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
     }
 
     void RenderManager::Submit(std::unique_ptr<graphics::rendercommands::RenderCommand> rc)

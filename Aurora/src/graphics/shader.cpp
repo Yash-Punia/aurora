@@ -30,7 +30,7 @@ namespace aurora::graphics
             }
         }
 
-        uint32_t fragmentShaderId = glCreateShader(GL_VERTEX_SHADER); //Returns reference to empty shader object
+        uint32_t fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER); //Returns reference to empty shader object
         if(status == GL_TRUE)
         {
             const GLchar* glSource = fragment.c_str(); //converts string to const GLchar*

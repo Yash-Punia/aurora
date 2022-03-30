@@ -2,10 +2,14 @@
 
 #include "glad/glad.h"
 
+#include <cstdint>
+
 namespace aurora::graphics
 {
     Mesh::Mesh(float* vertexArray, uint64_t vertexCount, uint64_t dimensions)
         : mVertexCount(vertexCount)
+        , mEbo(0)
+        , mElementCount(0)
     {
         //NOTE: VAO doesn't actually store the data but has reference to VBO
         glGenVertexArrays(1, &mVao); //Generates the VAO(number, reference to storage)
@@ -24,9 +28,27 @@ namespace aurora::graphics
         glBindVertexArray(0); //Unbind just to be sure there's no other VAO active
     }
 
+     Mesh::Mesh(float* vertexArray, uint64_t vertexCount, uint64_t dimensions, uint64_t* elementArray, uint64_t elementCount)
+        : Mesh(vertexArray, vertexCount, dimensions)
+    {
+        mElementCount = elementCount;
+
+        glBindVertexArray(mVao);
+        
+        glGenBuffers(1, &mEbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementCount * sizeof(uint64_t), elementArray, GL_STATIC_DRAW);
+
+        glBindVertexArray(0);
+    }
+
     Mesh::~Mesh() 
     {
         glDeleteBuffers(1, &mPositionVbo); //Delete binded VBOs
+        if(mEbo != 0) 
+        {
+            glDeleteBuffers(1, &mEbo);
+        }
         glDeleteVertexArrays(1, &mVao); //Delete VAO
     }
 

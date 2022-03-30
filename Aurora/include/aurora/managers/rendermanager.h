@@ -18,6 +18,7 @@ namespace aurora::managers
 
         void Clear();
         void SetClearColour(float r, float g, float b, float a);
+        void SetWireFrameMode(bool enabled);
 
         void Submit(std::unique_ptr<graphics::rendercommands::RenderCommand> rc);
         

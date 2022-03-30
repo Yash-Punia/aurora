@@ -1,8 +1,8 @@
-#include "graphics/rendercommands.h"
 #include "log.h"
 
 #include "graphics/mesh.h"
 #include "graphics/shader.h"
+#include "graphics/rendercommands.h"
 
 #include "glad/glad.h"
 
@@ -19,8 +19,15 @@ namespace aurora::graphics::rendercommands
             mesh->Bind();
             shader->Bind();
 
-            //Draw the actual data present in VBO(mode, first node, # of vertices)
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh->GetVertexCount());
+            if(mesh->GetElementCount() > 0)
+            {
+                glDrawElements(GL_TRIANGLES, mesh->GetElementCount(), GL_UNSIGNED_INT, 0);
+            }
+            else
+            {
+                //Draw the actual data present in VBO(mode, first node, # of vertices)
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh->GetVertexCount());
+            }
 
             mesh->Unbind();
             shader->Unbind();
