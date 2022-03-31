@@ -28,7 +28,7 @@ namespace aurora::graphics
         glBindVertexArray(0); //Unbind just to be sure there's no other VAO active
     }
 
-     Mesh::Mesh(float* vertexArray, uint64_t vertexCount, uint64_t dimensions, uint64_t* elementArray, uint64_t elementCount)
+     Mesh::Mesh(float* vertexArray, uint64_t vertexCount, uint64_t dimensions, uint32_t* elementArray, uint64_t elementCount)
         : Mesh(vertexArray, vertexCount, dimensions)
     {
         mElementCount = elementCount;
@@ -37,7 +37,7 @@ namespace aurora::graphics
         
         glGenBuffers(1, &mEbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEbo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementCount * sizeof(uint64_t), elementArray, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementCount * sizeof(uint32_t), elementArray, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
     }

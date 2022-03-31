@@ -40,7 +40,7 @@ namespace aurora
                 -0.5f,  0.5f, 0.f
             };
 
-            uint64_t elements[]
+            uint32_t elements[]
             {
                 0, 3, 1,
                 1, 3, 2
