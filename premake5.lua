@@ -143,6 +143,7 @@ project "AuroraEditor"
             "glad"
         }
 
+    --Debug config generates redundant files with more info
     filter "configurations:Debug"
         defines
         {
@@ -151,6 +152,7 @@ project "AuroraEditor"
         runtime "Debug"
         symbols "on"
 
+    --Release config generates only relevant files with optimized code
     filter "configurations:Release"
         defines
         {

@@ -23,7 +23,7 @@ project "glad"
     filter {"system:windows"}
         systemversion "latest"
 
-        --Debug config generates redundant files with more info
+    --Debug config generates redundant files with more info
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"

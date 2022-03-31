@@ -1,6 +1,8 @@
 #pragma once
 #include "spdlog/spdlog.h"
 
+#include <intrin.h>
+
 #define AURORA_DEFAULT_LOGGER_NAME "auroralogger" 
 #define AURORA_BREAK __debugBreak();
 

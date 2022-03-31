@@ -43,16 +43,6 @@ namespace aurora::core
         // Mapping all the openGL functions to their respective function pointers
         gladLoadGLLoader(SDL_GL_GetProcAddress);
 
-        // TODO: Move this to a renderer initialization
-        glEnable(GL_DEPTH_TEST); // Enable Depth in buffers
-        glDepthFunc(GL_LEQUAL);  // If anything is further away, do not render it (Occlusion)
-
-        glEnable(GL_BLEND); // Blend allows us to see through alpha (transparent objects)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Sets the function for blend
-
-        // violet color
-        glClearColor(0.263, 0.224, 0.51, 1);
-
         return true;
     }
     
@@ -81,8 +71,7 @@ namespace aurora::core
 
     void Window::BeginRender()
     {
-        // Clear the color of the screen // Clear any cache frame in depth
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Engine::Instance().GetRenderManager().Clear();
     }
 
     void Window::EndRender()

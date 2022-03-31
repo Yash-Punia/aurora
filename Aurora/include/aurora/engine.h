@@ -2,6 +2,7 @@
 
 #include "core/window.h"
 #include "managers/logmanager.h"
+#include "managers/rendermanager.h"
 
 //aurora namespace to look into it in other places
 namespace aurora
@@ -15,6 +16,9 @@ namespace aurora
         void Run();
         inline void Quit() { mIsRunning = false; }
 
+        //Managers
+        inline managers::RenderManager& GetRenderManager() { return mRenderManager; } 
+
     private:
         static Engine *sInstance; //Pointer to the only instance of Engine
         bool mIsRunning;
@@ -23,6 +27,7 @@ namespace aurora
 
         //Managers
         managers::LogManager mLogManager;
+        managers::RenderManager mRenderManager;
 
         // Singleton
         Engine();
