@@ -18,6 +18,7 @@ namespace aurora
 
         //Managers
         inline managers::RenderManager& GetRenderManager() { return mRenderManager; } 
+        inline core::Window& GetWindow() { return mWindow; }
 
     private:
         static Engine *sInstance; //Pointer to the only instance of Engine

@@ -4,6 +4,8 @@
 
 #include "SDL2/SDL.h"
 #include "glad/glad.h"
+#include "input/mouse.h"
+#include "input/keyboard.h"
 
 namespace aurora::core
 {
@@ -67,6 +69,10 @@ namespace aurora::core
                 break;
             }
         }
+
+        // Update input
+        aurora::input::Mouse::Update();
+        aurora::input::Keyboard::Update();
     }
 
     void Window::BeginRender()
@@ -78,6 +84,11 @@ namespace aurora::core
     {
         // Actually needed to see, because it swaps the buffer 
         SDL_GL_SwapWindow(mWindow);
+    }
+
+    void Window::GetSize(int& w, int& h)
+    {
+        SDL_GetWindowSize(mWindow, &w, &h);
     }
 
 } // namespace aurora::core
