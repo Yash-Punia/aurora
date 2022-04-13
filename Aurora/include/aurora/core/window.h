@@ -22,6 +22,8 @@ namespace aurora::core
         void BeginRender();
         void EndRender();
 
+        void GetSize(int& w, int& h);
+
 
     private:
         // Forward declarations used here
