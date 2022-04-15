@@ -6,6 +6,7 @@
 #include "glad/glad.h"
 #include "input/mouse.h"
 #include "input/keyboard.h"
+#include "input/joystick.h"
 
 namespace aurora::core
 {
@@ -21,7 +22,7 @@ namespace aurora::core
     bool Window::Create()
     {
         mWindow = SDL_CreateWindow("Aurora Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-        if(!mWindow)
+        if (!mWindow)
         {
             AURORA_ERROR("\n Error creating window: {}", SDL_GetError());
             return false;
@@ -47,7 +48,7 @@ namespace aurora::core
 
         return true;
     }
-    
+
     void Window::Shutdown()
     {
         SDL_DestroyWindow(mWindow);
@@ -57,12 +58,20 @@ namespace aurora::core
     void Window::PumpEvents()
     {
         SDL_Event e;
-        while(SDL_PollEvent(&e))
+        while (SDL_PollEvent(&e))
         {
             switch (e.type)
             {
             case SDL_QUIT:
                 Engine::Instance().Quit();
+                break;
+
+            case SDL_CONTROLLERDEVICEADDED:
+                input::Joystick::OnJoystickConnected(e.cdevice);
+                break;
+
+            case SDL_CONTROLLERDEVICEREMOVED:
+                input::Joystick::OnJoystickDisconnected(e.cdevice);
                 break;
             
             default:
@@ -73,6 +82,7 @@ namespace aurora::core
         // Update input
         aurora::input::Mouse::Update();
         aurora::input::Keyboard::Update();
+        aurora::input::Joystick::Update();
     }
 
     void Window::BeginRender()
@@ -82,11 +92,11 @@ namespace aurora::core
 
     void Window::EndRender()
     {
-        // Actually needed to see, because it swaps the buffer 
+        // Actually needed to see, because it swaps the buffer
         SDL_GL_SwapWindow(mWindow);
     }
 
-    void Window::GetSize(int& w, int& h)
+    void Window::GetSize(int &w, int &h)
     {
         SDL_GetWindowSize(mWindow, &w, &h);
     }

@@ -8,6 +8,7 @@
 
 #include "input/mouse.h"
 #include "input/keyboard.h"
+#include "input/joystick.h"
 
 #include "sdl2/SDL.h"
 
@@ -27,24 +28,20 @@ namespace aurora
     {
         if (Initialize())
         {
-            float vertices[]
-            {
-                 0.5f,  0.5f, 0.f,
-                 0.5f, -0.5f, 0.f,
+            float vertices[]{
+                0.5f, 0.5f, 0.f,
+                0.5f, -0.5f, 0.f,
                 -0.5f, -0.5f, 0.f,
-                -0.5f,  0.5f, 0.f
-            };
+                -0.5f, 0.5f, 0.f};
 
-            uint32_t elements[]
-            {
+            uint32_t elements[]{
                 0, 3, 1,
-                1, 3, 2
-            };
-            // std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh> (&vertices[0], 3, 3); //For vertex only 
-            std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh> (&vertices[0], 4, 3, &elements[0], 6);
+                1, 3, 2};
+            // std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh> (&vertices[0], 3, 3); //For vertex only
+            std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh>(&vertices[0], 4, 3, &elements[0], 6);
 
-            //Test Shader
-            const char* vertexShader = R"(
+            // Test Shader
+            const char *vertexShader = R"(
                 #version 410 core
                 layout (location = 0) in vec3 position;
                 out vec3 vpos;
@@ -56,19 +53,20 @@ namespace aurora
                 }
             )";
 
-          const char* fragmentShader = R"(
+            const char *fragmentShader = R"(
                 #version 410 core
                 out vec4 outColor;
                 in vec3 vpos;
 
                 uniform vec3 color = vec3(0.0);
+                uniform float blue = 0.5f;
                 void main()
                 {
-                    outColor = vec4(vpos, 1.0);
+                    outColor = vec4(vpos.xy, blue, 1.0);
                 }
             )";
 
-            std::shared_ptr<graphics::Shader> shader = std::make_shared<graphics::Shader> (vertexShader, fragmentShader);
+            std::shared_ptr<graphics::Shader> shader = std::make_shared<graphics::Shader>(vertexShader, fragmentShader);
             shader->SetUniformFloat3("color", 1, 0, 0);
 
             // mRenderManager.SetWireFrameMode(false); // Make it true for only the line
@@ -81,7 +79,7 @@ namespace aurora
             {
                 mWindow.PumpEvents();
 
-                // AURORA_TRACE("X: {}, Y: {}, {}{}{}{}{}", input::Mouse::X(), input::Mouse::Y(), 
+                // AURORA_TRACE("X: {}, Y: {}, {}{}{}{}{}", input::Mouse::X(), input::Mouse::Y(),
                 //     input::Mouse::Button(AURORA_INPUT_MOUSE_LEFT),
                 //     input::Mouse::Button(AURORA_INPUT_MOUSE_MIDDLE),
                 //     input::Mouse::Button(AURORA_INPUT_MOUSE_RIGHT),
@@ -92,17 +90,52 @@ namespace aurora
                 int windowH = 0;
                 GetWindow().GetSize(windowW, windowH);
 
-                float xNormalized = (float) input::Mouse::X() / (float) windowW;
-                float yNormalized = (float) (windowH - input::Mouse::Y()) / (float) windowH;
+                float xNormalized = (float)input::Mouse::X() / (float)windowW;
+                float yNormalized = (float)(windowH - input::Mouse::Y()) / (float)windowH;
 
                 // Use the above for smooth transition, this DX will use delta in x positions
                 // float xNormalized = (float) input::Mouse::DX() / 100.f;
                 // float yNormalized = (float) input::Mouse::DY() / 100.f;
 
-                if(input::Keyboard::Key(AURORA_INPUT_KEY_LEFT))  { xKeyOffset -= keySpeed; }
-                if(input::Keyboard::Key(AURORA_INPUT_KEY_RIGHT)) { xKeyOffset += keySpeed; }
-                if(input::Keyboard::Key(AURORA_INPUT_KEY_UP))    { yKeyOffset += keySpeed; }
-                if(input::Keyboard::Key(AURORA_INPUT_KEY_DOWN))  { yKeyOffset -= keySpeed; }
+                if (input::Keyboard::Key(AURORA_INPUT_KEY_LEFT))
+                {
+                    xKeyOffset -= keySpeed;
+                }
+                if (input::Keyboard::Key(AURORA_INPUT_KEY_RIGHT))
+                {
+                    xKeyOffset += keySpeed;
+                }
+                if (input::Keyboard::Key(AURORA_INPUT_KEY_UP))
+                {
+                    yKeyOffset += keySpeed;
+                }
+                if (input::Keyboard::Key(AURORA_INPUT_KEY_DOWN))
+                {
+                    yKeyOffset -= keySpeed;
+                }
+
+                if (input::Joystick::IsJoystickAvailable(0))
+                {
+                    if (input::Joystick::GetButton(0, input::Joystick::Button::DPAD_Left))
+                    {
+                        xKeyOffset -= keySpeed;
+                    }
+                    if (input::Joystick::GetButton(0, input::Joystick::Button::DPAD_Right))
+                    {
+                        xKeyOffset += keySpeed;
+                    }
+                    if (input::Joystick::GetButton(0, input::Joystick::Button::DPAD_Up))
+                    {
+                        yKeyOffset += keySpeed;
+                    }
+                    if (input::Joystick::GetButton(0, input::Joystick::Button::DPAD_Down))
+                    {
+                        yKeyOffset -= keySpeed;
+                    }
+
+                    float blue = input::Joystick::GetAxis(0, input::Joystick::Axis::LeftTrigger);
+                    shader->SetUniformFloat("blue", blue);
+                }
 
                 shader->SetUniformFloat2("offset", xNormalized + xKeyOffset, yNormalized + yKeyOffset);
 
@@ -126,8 +159,9 @@ namespace aurora
     {
         bool ret = false;
         // AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
-        
-        if(!mIsInitialized) {
+
+        if (!mIsInitialized)
+        {
             mLogManager.Initialize();
 
             AURORA_TRACE("AuroraEngine v{}.{}", 0, 1);
@@ -164,7 +198,7 @@ namespace aurora
                 Shutdown();
             }
         }
-    
+
         return ret;
     }
 
@@ -177,7 +211,7 @@ namespace aurora
         mRenderManager.Shutdown();
         mLogManager.Shutdown();
 
-        //Shutdown SDL
+        // Shutdown SDL
         mWindow.Shutdown();
         SDL_Quit();
     }
@@ -185,9 +219,10 @@ namespace aurora
     // Singleton
     Engine *Engine::sInstance = nullptr;
 
-    Engine::Engine() 
+    Engine::Engine()
         : mIsRunning(false),
           mIsInitialized(false)
-    {}
+    {
+    }
 
 }
