@@ -31,9 +31,6 @@ namespace aurora::input
         // Use only buttonsLast and remove the need for three arrays
         static std::array<bool, Mouse::ButtonCount> buttons;       // current state
         static std::array<bool, Mouse::ButtonCount> buttonsLast;   // whether button was just pressed
-        // static std::array<bool, Mouse::ButtonCount> buttonsUp;     // whether buttons was just released
-
-
     };
 } 
 
