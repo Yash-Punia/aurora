@@ -114,7 +114,8 @@ project "AuroraEditor"
     sysincludedirs
     {
         "Aurora/include",
-        "%{prj.name}/src"
+        "%{prj.name}/src",
+        "%{externals.spdlog}/include"
     }
 
     flags

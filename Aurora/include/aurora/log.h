@@ -1,10 +1,11 @@
 #pragma once
 #include "spdlog/spdlog.h"
+#include <signal.h>
 
 #include <intrin.h>
 
 #define AURORA_DEFAULT_LOGGER_NAME "auroralogger" 
-#define AURORA_BREAK __debugBreak();
+#define AURORA_BREAK raise(SIGABRT);
 
 #ifndef AURORA_CONFIG_RELEASE
 #define AURORA_TRACE(...)   if(spdlog::get(AURORA_DEFAULT_LOGGER_NAME) != nullptr) {spdlog::get(AURORA_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);}

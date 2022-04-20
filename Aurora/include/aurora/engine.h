@@ -4,16 +4,16 @@
 #include "managers/logmanager.h"
 #include "managers/rendermanager.h"
 
-//aurora namespace to look into it in other places
 namespace aurora
 {
+    class App;
     class Engine
     {
     public:
         static Engine &Instance(); //Public access to get the reference of available instance of engine.
         ~Engine() {} 
 
-        void Run();
+        void Run(App* app);
         inline void Quit() { mIsRunning = false; }
 
         //Managers
@@ -25,6 +25,7 @@ namespace aurora
         bool mIsRunning;
         bool mIsInitialized;
         core::Window mWindow;
+        App* mApp;
 
         //Managers
         managers::LogManager mLogManager;
@@ -34,5 +35,7 @@ namespace aurora
         Engine();
         bool Initialize();
         void Shutdown();
+        void Update();
+        void Render();
     };
 }
