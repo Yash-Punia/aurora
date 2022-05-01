@@ -8,6 +8,8 @@
 #include "input/keyboard.h"
 #include "input/joystick.h"
 
+#include "imgui/imgui.h"
+
 namespace aurora::core
 {
     Window::Window() : mWindow(nullptr) {}
@@ -45,6 +47,8 @@ namespace aurora::core
 
         // Mapping all the openGL functions to their respective function pointers
         gladLoadGLLoader(SDL_GL_GetProcAddress);
+
+        mImguiWindow.Create();
 
         return true;
     }
@@ -92,6 +96,11 @@ namespace aurora::core
 
     void Window::EndRender()
     {
+        //Embedding Imgui window inside window to render imgui first before buffer swap
+        mImguiWindow.BeginRender();
+        ImGui::ShowDemoWindow();
+        mImguiWindow.EndRender();
+
         // Actually needed to see, because it swaps the buffer
         SDL_GL_SwapWindow(mWindow);
     }

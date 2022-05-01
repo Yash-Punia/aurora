@@ -40,14 +40,17 @@ project "Aurora"
     files 
     {
         "%{prj.name}/include/**.h",
+        "%{prj.name}/include/**.cpp",
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/**.gdb",
     }
 
     --To build this module, use includes
     sysincludedirs
     {
         "%{prj.name}/include/aurora",
+        "%{prj.name}/include/external",
         "%{externals.sdl2}/include",
         "%{externals.spdlog}/include",
         "%{externals.glad}/include"
