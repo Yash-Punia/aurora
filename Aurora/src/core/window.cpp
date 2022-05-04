@@ -87,6 +87,7 @@ namespace aurora::core
         aurora::input::Mouse::Update();
         aurora::input::Keyboard::Update();
         aurora::input::Joystick::Update();
+        mImguiWindow.HandleSDLEvent(e);
     }
 
     void Window::BeginRender()

@@ -6,7 +6,6 @@
 struct SDL_Window;
 using SDL_GLContext = void*;
 
-
 namespace aurora::core
 {
     class Window
