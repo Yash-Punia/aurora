@@ -64,6 +64,7 @@ namespace aurora::core
         SDL_Event e;
         while (SDL_PollEvent(&e))
         {
+            mImguiWindow.HandleSDLEvent(e);
             switch (e.type)
             {
             case SDL_QUIT:
@@ -87,7 +88,6 @@ namespace aurora::core
         aurora::input::Mouse::Update();
         aurora::input::Keyboard::Update();
         aurora::input::Joystick::Update();
-        mImguiWindow.HandleSDLEvent(e);
     }
 
     void Window::BeginRender()
