@@ -2,12 +2,26 @@
 
 #include "imguiwindow.h"
 
+#include <string>
+
 // Forward declarations
 struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace aurora::core
 {
+    struct WindowProperties
+    {
+        std::string title;
+        int x, y, w, h;
+        int wMin, hMin;
+        int flags;
+        float ccR, ccG, ccB;
+        ImguiWindowProperties imguiProps;
+
+        WindowProperties();
+    };
+
     class Window
     {
     public:
@@ -15,7 +29,7 @@ namespace aurora::core
         ~Window();
 
         // Basic operations
-        bool Create();
+        bool Create(const WindowProperties& props);
         void Shutdown();
 
         // Queues the events

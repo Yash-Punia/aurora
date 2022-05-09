@@ -6,6 +6,13 @@ using SDL_GLContext = void*;
 
 namespace aurora::core
 {
+    struct ImguiWindowProperties
+    {
+        bool MoveFromTitleBarOnly = true;
+        bool IsDockingEnabled = false;
+        bool IsViewportEnabled = false;
+    };
+
     class ImguiWindow
     {
     public:
@@ -13,11 +20,14 @@ namespace aurora::core
         ~ImguiWindow();
 
         // Basic operations
-        void Create();
+        void Create(const ImguiWindowProperties& props);
         void Shutdown();
 
         // Queues the events
         void HandleSDLEvent(SDL_Event& e);
+
+        bool WantCaptureMouse();
+        bool WantCaptureKeyboard();
 
         void BeginRender();
         void EndRender();

@@ -3,6 +3,8 @@
 #include "engine.h"
 #include "log.h"
 
+#include "SDL2/SDL.h"
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -15,12 +17,25 @@ namespace aurora::core
         Shutdown();
     }
 
-    void ImguiWindow::Create()
+    void ImguiWindow::Create(const ImguiWindowProperties& props)
     {
         IMGUI_CHECKVERSION(); //Verify data structure of current files with imgui.cpp
 
         //Initialize ImGui
         ImGui::CreateContext();
+
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigWindowsMoveFromTitleBarOnly = props.MoveFromTitleBarOnly;
+
+        if(props.IsDockingEnabled)
+        {
+            io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        }
+
+        if(props.IsViewportEnabled)
+        {
+            io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        }
 
         auto& window = Engine::Instance().GetWindow();
         ImGui_ImplSDL2_InitForOpenGL(window.GetSDLWindow(), window.GetGLContext());
@@ -46,6 +61,16 @@ namespace aurora::core
         ImGui_ImplSDL2_ProcessEvent(&e);
     }
 
+    bool ImguiWindow::WantCaptureMouse()
+    {
+        return ImGui::GetIO().WantCaptureMouse;
+    }
+    
+    bool ImguiWindow::WantCaptureKeyboard()
+    {
+        return ImGui::GetIO().WantCaptureKeyboard;
+    }
+
     void ImguiWindow::BeginRender()
     {
         // ImGui::NewFrame();
@@ -59,5 +84,15 @@ namespace aurora::core
         ImGui::EndFrame();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        ImGuiIO& io = ImGui::GetIO();
+        if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            auto& window = Engine::Instance().GetWindow();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+
+            SDL_GL_MakeCurrent(window.GetSDLWindow(), window.GetGLContext());
+        }
     }
 }

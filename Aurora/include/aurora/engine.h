@@ -16,9 +16,11 @@ namespace aurora
         void Run(App* app);
         inline void Quit() { mIsRunning = false; }
 
+        inline App& GetApp() { return *mApp; }
+        inline core::Window& GetWindow() { return mWindow; }
+
         //Managers
         inline managers::RenderManager& GetRenderManager() { return mRenderManager; } 
-        inline core::Window& GetWindow() { return mWindow; }
 
     private:
         static Engine *sInstance; //Pointer to the only instance of Engine

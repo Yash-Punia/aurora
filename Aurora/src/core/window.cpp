@@ -1,17 +1,32 @@
 #include "core/window.h"
 #include "engine.h"
 #include "log.h"
+#include "app.h"
 
 #include "SDL2/SDL.h"
 #include "glad/glad.h"
+
 #include "input/mouse.h"
 #include "input/keyboard.h"
 #include "input/joystick.h"
 
-#include "imgui/imgui.h"
-
 namespace aurora::core
 {
+    WindowProperties::WindowProperties()
+    {
+        title = "Aurora Editor";
+        x = SDL_WINDOWPOS_CENTERED;
+        y = SDL_WINDOWPOS_CENTERED;
+        w = 1920;
+        h = 1080;
+        wMin = 320;
+        hMin = 180;
+        flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+        ccR = 0.263;
+        ccG = 0.224;
+        ccB = 0.51;
+    }
+
     Window::Window() : mWindow(nullptr) {}
     Window::~Window()
     {
@@ -21,9 +36,9 @@ namespace aurora::core
         }
     }
 
-    bool Window::Create()
+    bool Window::Create(const WindowProperties& props)
     {
-        mWindow = SDL_CreateWindow("Aurora Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+        mWindow = SDL_CreateWindow(props.title.c_str(), props.x, props.y, props.w, props.h, props.flags);
         if (!mWindow)
         {
             AURORA_ERROR("\n Error creating window: {}", SDL_GetError());
@@ -36,7 +51,7 @@ namespace aurora::core
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // To reduce flickering
 
-        SDL_SetWindowMinimumSize(mWindow, 200, 200);
+        SDL_SetWindowMinimumSize(mWindow, props.wMin, props.hMin);
 
         mGLContext = SDL_GL_CreateContext(mWindow);
         if (mGLContext == nullptr)
@@ -48,7 +63,9 @@ namespace aurora::core
         // Mapping all the openGL functions to their respective function pointers
         gladLoadGLLoader(SDL_GL_GetProcAddress);
 
-        mImguiWindow.Create();
+        Engine::Instance().GetRenderManager().SetClearColour(props.ccR, props.ccG, props.ccB, 1.f);
+
+        mImguiWindow.Create(props.imguiProps);
 
         return true;
     }
@@ -85,8 +102,14 @@ namespace aurora::core
         }
 
         // Update input
-        aurora::input::Mouse::Update();
-        aurora::input::Keyboard::Update();
+        if(!mImguiWindow.WantCaptureMouse()) 
+        {
+            aurora::input::Mouse::Update();
+        }
+        if(!mImguiWindow.WantCaptureKeyboard()) 
+        {
+            aurora::input::Keyboard::Update();
+        }
         aurora::input::Joystick::Update();
     }
 
@@ -99,7 +122,7 @@ namespace aurora::core
     {
         //Embedding Imgui window inside window to render imgui first before buffer swap
         mImguiWindow.BeginRender();
-        ImGui::ShowDemoWindow();
+        Engine::Instance().GetApp().ImguiRender();
         mImguiWindow.EndRender();
 
         // Actually needed to see, because it swaps the buffer
