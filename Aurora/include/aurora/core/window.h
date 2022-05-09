@@ -1,11 +1,27 @@
 #pragma once
 
+#include "imguiwindow.h"
+
+#include <string>
+
 // Forward declarations
 struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace aurora::core
 {
+    struct WindowProperties
+    {
+        std::string title;
+        int x, y, w, h;
+        int wMin, hMin;
+        int flags;
+        float ccR, ccG, ccB;
+        ImguiWindowProperties imguiProps;
+
+        WindowProperties();
+    };
+
     class Window
     {
     public:
@@ -13,7 +29,7 @@ namespace aurora::core
         ~Window();
 
         // Basic operations
-        bool Create();
+        bool Create(const WindowProperties& props);
         void Shutdown();
 
         // Queues the events
@@ -24,10 +40,12 @@ namespace aurora::core
 
         void GetSize(int& w, int& h);
 
-
+        SDL_Window* GetSDLWindow() { return mWindow; }
+        SDL_GLContext GetGLContext() { return mGLContext; }
     private:
         // Forward declarations used here
         SDL_Window* mWindow;
         SDL_GLContext mGLContext;
+        ImguiWindow mImguiWindow;
     };
 } // namespace aurora::core

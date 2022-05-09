@@ -79,8 +79,10 @@ namespace aurora
                 SDL_VERSION(&version);
                 AURORA_INFO("SDL v{}.{}.{}", (int32_t)version.major, (int32_t)version.minor, (int32_t)version.patch);
 
+                core::WindowProperties props = mApp->GetWindowProperties();
+
                 // Actually creating the window
-                if (mWindow.Create())
+                if (mWindow.Create(props))
                 {
                     // Initialize Managers
                     mRenderManager.Initialize();
@@ -115,6 +117,9 @@ namespace aurora
 
         // Shutdown Client app
         mApp->Shutdown();
+
+        //Shutdown Inputs
+        input::Joystick::Shutdown();
 
         // Shutdown Managers - usually shut down in reverse order
         mRenderManager.Shutdown();

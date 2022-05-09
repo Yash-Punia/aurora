@@ -7,6 +7,8 @@
 #include "aurora/input/joystick.h"
 #include "aurora/input/keyboard.h"
 
+#include "external/imgui/imgui.h"
+
 using namespace aurora;
 
 class Editor : public aurora::App
@@ -19,6 +21,19 @@ private:
     float keySpeed = 0.001f;
 
 public:
+    core::WindowProperties GetWindowProperties()
+    {
+        core::WindowProperties props;
+        props.w = 800;
+        props.h = 600;
+        props.title = "Aurora Editor";
+
+        // props.imguiProps.IsViewportEnabled = true;
+        props.imguiProps.IsDockingEnabled = true;
+
+        return props;  
+    }
+
     void Initialize() override
     {
         AURORA_TRACE("Editor::Initialize()");
@@ -71,16 +86,33 @@ public:
 
     void Render() override
     {
-        AURORA_TRACE("Editor::Render()");
+        // AURORA_TRACE("Editor::Render()");
 
         auto rc = std::make_unique<graphics::rendercommands::RenderMesh>(mMesh, mShader);
         Engine::Instance().GetRenderManager().Submit(std::move(rc));
         Engine::Instance().GetRenderManager().Flush();
     }
 
+    void ImguiRender() override
+    {
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        if(ImGui::Begin("RectPosX"))
+        {
+            ImGui::DragFloat("Rect Pos X", &xKeyOffset, 0.01f);
+        }
+        
+        ImGui::End();
+
+        if(ImGui::Begin("RectPosY"))
+        {
+            ImGui::DragFloat("Rect Pos Y", &yKeyOffset, 0.01f);
+        }
+        ImGui::End();
+    }
+
     void Update() override
     {
-        AURORA_TRACE("Editor::Update()");
+        // AURORA_TRACE("Editor::Update()");
 
         int windowW = 0;
         int windowH = 0;
