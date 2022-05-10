@@ -1,8 +1,15 @@
 #pragma once
 
 #include "imguiwindow.h"
+#include "graphics/framebuffer.h"
 
 #include <string>
+#include <memory>
+
+namespace aurora::graphics
+{
+    class Framebuffer;
+}
 
 // Forward declarations
 struct SDL_Window;
@@ -47,5 +54,6 @@ namespace aurora::core
         SDL_Window* mWindow;
         SDL_GLContext mGLContext;
         ImguiWindow mImguiWindow;
+        std::shared_ptr<graphics::Framebuffer> mFramebuffer;
     };
 } // namespace aurora::core

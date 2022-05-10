@@ -86,11 +86,10 @@ public:
 
     void Render() override
     {
-        // AURORA_TRACE("Editor::Render()");
-
-        auto rc = std::make_unique<graphics::rendercommands::RenderMesh>(mMesh, mShader);
-        Engine::Instance().GetRenderManager().Submit(std::move(rc));
-        Engine::Instance().GetRenderManager().Flush();
+        AURORA_TRACE("Editor::Render()");
+        auto &rm = Engine::Instance().GetRenderManager();
+        rm.Submit(AURORA_SUBMIT_RC(RenderMesh, mMesh, mShader));
+        rm.Flush();
     }
 
     void ImguiRender() override
@@ -112,7 +111,7 @@ public:
 
     void Update() override
     {
-        // AURORA_TRACE("Editor::Update()");
+        AURORA_TRACE("Editor::Update()");
 
         int windowW = 0;
         int windowH = 0;

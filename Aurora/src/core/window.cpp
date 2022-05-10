@@ -9,6 +9,7 @@
 #include "input/mouse.h"
 #include "input/keyboard.h"
 #include "input/joystick.h"
+#include "graphics/framebuffer.h"
 
 namespace aurora::core
 {
@@ -50,6 +51,7 @@ namespace aurora::core
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // To reduce flickering
+        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); 
 
         SDL_SetWindowMinimumSize(mWindow, props.wMin, props.hMin);
 
@@ -63,7 +65,12 @@ namespace aurora::core
         // Mapping all the openGL functions to their respective function pointers
         gladLoadGLLoader(SDL_GL_GetProcAddress);
 
-        Engine::Instance().GetRenderManager().SetClearColour(props.ccR, props.ccG, props.ccB, 1.f);
+        // We don't need this anymore as we are manually rendering it 
+        // onto the framebuffer first and not the window
+        // Engine::Instance().GetRenderManager().SetClearColour(props.ccR, props.ccG, props.ccB, 1.f);
+
+        mFramebuffer = std::make_shared<graphics::Framebuffer>(props.w, props.h);
+        mFramebuffer->SetClearColour(props.ccR, props.ccG, props.ccB, 1.f);
 
         mImguiWindow.Create(props.imguiProps);
 
@@ -78,6 +85,7 @@ namespace aurora::core
 
     void Window::PumpEvents()
     {
+        AURORA_TRACE("Pumping events");
         SDL_Event e;
         while (SDL_PollEvent(&e))
         {
@@ -115,11 +123,18 @@ namespace aurora::core
 
     void Window::BeginRender()
     {
-        Engine::Instance().GetRenderManager().Clear();
+        AURORA_TRACE("Let's push a buffer");
+        auto& rm = Engine::Instance().GetRenderManager();
+        rm.Clear();
+        rm.Submit( AURORA_SUBMIT_RC(PushFramebuffer, mFramebuffer) );
+        AURORA_TRACE("Frame buffer pushed");
     }
 
     void Window::EndRender()
     {
+        auto& rm = Engine::Instance().GetRenderManager();
+        rm.Submit( AURORA_SUBMIT_RC(PopFramebuffer) );
+        rm.Flush();
         //Embedding Imgui window inside window to render imgui first before buffer swap
         mImguiWindow.BeginRender();
         Engine::Instance().GetApp().ImguiRender();

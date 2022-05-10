@@ -1,7 +1,9 @@
 #include "log.h"
+#include "engine.h"
 
 #include "graphics/mesh.h"
 #include "graphics/shader.h"
+#include "graphics/framebuffer.h"
 #include "graphics/rendercommands.h"
 
 #include "glad/glad.h"
@@ -36,5 +38,24 @@ namespace aurora::graphics::rendercommands
         {
             AURORA_WARN("Attempting to execute RenderMesh with invalid data");
         }
+    }
+
+    void PushFramebuffer::Execute()
+    {
+        std::shared_ptr<Framebuffer> fb = mFramebuffer.lock();
+
+        if (fb)
+        {
+            Engine::Instance().GetRenderManager().PushFramebuffer(fb);
+        }
+        else
+        {
+            AURORA_WARN("Attempting to execute PushFramebuffer with invalid data");
+        }
+    }
+
+    void PopFramebuffer::Execute()
+    {
+        
     }
 }

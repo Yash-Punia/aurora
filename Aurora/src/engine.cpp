@@ -31,6 +31,7 @@ namespace aurora
         mApp = app;
         if (Initialize())
         {
+            AURORA_TRACE("App has been initialized")
             // mRenderManager.SetWireFrameMode(false); // Make it true for only the line
             while (mIsRunning) // Game Loop
             {
@@ -62,7 +63,7 @@ namespace aurora
     bool Engine::Initialize()
     {
         bool ret = false;
-        // AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
+        AURORA_ASSERT(!mIsInitialized, "Attempting to call Engine::Initialize more than once!");
 
         if (!mIsInitialized)
         {

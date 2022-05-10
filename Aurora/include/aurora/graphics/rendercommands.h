@@ -6,14 +6,15 @@ namespace aurora::graphics
 {
     class Mesh;
     class Shader;
+    class Framebuffer;
 
     namespace rendercommands
     {
         class RenderCommand
         {
-            public:
-                virtual void Execute() = 0;
-                virtual ~RenderCommand() {}
+        public:
+            virtual void Execute() = 0;
+            virtual ~RenderCommand() {}
         };
 
         class RenderMesh : public RenderCommand
@@ -21,11 +22,29 @@ namespace aurora::graphics
         public:
             RenderMesh(std::weak_ptr<Mesh> mesh, std::weak_ptr<Shader> shader)
                 : mMesh(mesh), mShader(shader) {}
-        
-            virtual void Execute();
+
+            virtual void Execute() override;
+
         private:
             std::weak_ptr<Mesh> mMesh;
             std::weak_ptr<Shader> mShader;
+        };
+
+        class PushFramebuffer : public RenderCommand
+        {
+        public:
+            PushFramebuffer(std::weak_ptr<Framebuffer> framebuffer) : mFramebuffer(framebuffer) {}
+            virtual void Execute() override;
+
+        private:
+            std::weak_ptr<Framebuffer> mFramebuffer;
+        };
+
+        class PopFramebuffer : public RenderCommand
+        {
+        public:
+            PopFramebuffer() {}
+            virtual void Execute() override;
         };
     }
 }
