@@ -104,7 +104,7 @@ namespace aurora::managers
 
     void RenderManager::PopFramebuffer()
     {
-        AURORA_ASSERT(mFramebuffers.size() == 0, "RenderManager::PopFramebuffer - empty stack");
+        AURORA_ASSERT(mFramebuffers.size() > 0, "RenderManager::PopFramebuffer - empty stack");
         if (mFramebuffers.size() > 0)
         {
             mFramebuffers.pop();

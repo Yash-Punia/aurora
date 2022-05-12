@@ -31,6 +31,8 @@ namespace aurora::graphics
         glGenTextures(1, &mTextureId); AURORA_CHECK_GL_ERROR;
         glBindTexture(GL_TEXTURE_2D, mTextureId); AURORA_CHECK_GL_ERROR;
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); AURORA_CHECK_GL_ERROR;
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); AURORA_CHECK_GL_ERROR;
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); AURORA_CHECK_GL_ERROR;
         glBindTexture(GL_TEXTURE_2D, 0); AURORA_CHECK_GL_ERROR;
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0); AURORA_CHECK_GL_ERROR;
 

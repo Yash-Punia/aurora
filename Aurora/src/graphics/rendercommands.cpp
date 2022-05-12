@@ -56,6 +56,6 @@ namespace aurora::graphics::rendercommands
 
     void PopFramebuffer::Execute()
     {
-        
+        Engine::Instance().GetRenderManager().PopFramebuffer();
     }
 }

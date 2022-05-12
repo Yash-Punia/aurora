@@ -3,6 +3,7 @@
 #include "aurora/log.h"
 #include "aurora/graphics/mesh.h"
 #include "aurora/graphics/shader.h"
+#include "aurora/graphics/framebuffer.h"
 #include "aurora/input/mouse.h"
 #include "aurora/input/joystick.h"
 #include "aurora/input/keyboard.h"
@@ -86,7 +87,7 @@ public:
 
     void Render() override
     {
-        AURORA_TRACE("Editor::Render()");
+        // AURORA_TRACE("Editor::Render()");
         auto &rm = Engine::Instance().GetRenderManager();
         rm.Submit(AURORA_SUBMIT_RC(RenderMesh, mMesh, mShader));
         rm.Flush();
@@ -107,11 +108,29 @@ public:
             ImGui::DragFloat("Rect Pos Y", &yKeyOffset, 0.01f);
         }
         ImGui::End();
+
+        if(ImGui::Begin("GameView"))
+        {
+            if(ImGui::IsWindowHovered())
+            {
+                ImGui::CaptureMouseFromApp(false);
+            }
+
+            auto& window = Engine::Instance().GetWindow();
+
+            ImVec2 size = { 100, 100};
+            ImVec2 uv0 = { 0, 1 };
+            ImVec2 uv1 = { 1, 0 };
+
+            // void* is 64 bits pointer but we need to cast 32 bit int pointer
+            ImGui::Image((void*)(intptr_t)window.GetFramebuffer()->GetTextureId(), size, uv0, uv1);
+        }
+        ImGui::End();
     }
 
     void Update() override
     {
-        AURORA_TRACE("Editor::Update()");
+        // AURORA_TRACE("Editor::Update()");
 
         int windowW = 0;
         int windowH = 0;

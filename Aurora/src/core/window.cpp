@@ -85,7 +85,6 @@ namespace aurora::core
 
     void Window::PumpEvents()
     {
-        AURORA_TRACE("Pumping events");
         SDL_Event e;
         while (SDL_PollEvent(&e))
         {
@@ -123,11 +122,9 @@ namespace aurora::core
 
     void Window::BeginRender()
     {
-        AURORA_TRACE("Let's push a buffer");
         auto& rm = Engine::Instance().GetRenderManager();
         rm.Clear();
         rm.Submit( AURORA_SUBMIT_RC(PushFramebuffer, mFramebuffer) );
-        AURORA_TRACE("Frame buffer pushed");
     }
 
     void Window::EndRender()

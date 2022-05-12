@@ -1,7 +1,7 @@
 #pragma once
 
 #include "imguiwindow.h"
-#include "graphics/framebuffer.h"
+#include "aurora/graphics/framebuffer.h"
 
 #include <string>
 #include <memory>
@@ -47,8 +47,9 @@ namespace aurora::core
 
         void GetSize(int& w, int& h);
 
-        SDL_Window* GetSDLWindow() { return mWindow; }
-        SDL_GLContext GetGLContext() { return mGLContext; }
+        inline SDL_Window* GetSDLWindow() { return mWindow; }
+        inline SDL_GLContext GetGLContext() { return mGLContext; }
+        inline graphics::Framebuffer* GetFramebuffer() { return mFramebuffer.get(); }
     private:
         // Forward declarations used here
         SDL_Window* mWindow;
