@@ -1,7 +1,7 @@
 #pragma once
 
 #include "imguiwindow.h"
-#include "aurora/graphics/framebuffer.h"
+#include "../graphics/framebuffer.h"
 
 #include <string>
 #include <memory>

@@ -109,6 +109,7 @@ public:
         }
         ImGui::End();
 
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
         if(ImGui::Begin("GameView"))
         {
             if(ImGui::IsWindowHovered())
@@ -118,7 +119,7 @@ public:
 
             auto& window = Engine::Instance().GetWindow();
 
-            ImVec2 size = { 100, 100};
+            ImVec2 size = ImGui::GetWindowSize();
             ImVec2 uv0 = { 0, 1 };
             ImVec2 uv1 = { 1, 0 };
 
@@ -126,6 +127,8 @@ public:
             ImGui::Image((void*)(intptr_t)window.GetFramebuffer()->GetTextureId(), size, uv0, uv1);
         }
         ImGui::End();
+        ImGui::PopStyleVar();
+
     }
 
     void Update() override

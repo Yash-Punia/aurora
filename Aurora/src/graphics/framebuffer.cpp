@@ -19,8 +19,8 @@ namespace aurora::graphics
         
     
     {
-        glGenBuffers(1, &mFbo); AURORA_CHECK_GL_ERROR;
-        glBindBuffer(GL_FRAMEBUFFER, mFbo); AURORA_CHECK_GL_ERROR;
+        glGenFramebuffers(1, &mFbo); AURORA_CHECK_GL_ERROR;
+        glBindFramebuffer(GL_FRAMEBUFFER, mFbo); AURORA_CHECK_GL_ERROR;
 
         /**
          * Instead of using direct colours, we are here using colours from
