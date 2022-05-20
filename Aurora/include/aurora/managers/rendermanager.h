@@ -2,6 +2,8 @@
 
 #include "../graphics/rendercommands.h"
 
+#include "external/glm/glm.hpp"
+
 #include <queue>
 #include <stack>
 #include <memory>
@@ -23,9 +25,9 @@ namespace aurora::managers
         void Shutdown();
 
         void Clear();
-        void SetClearColour(float r, float g, float b, float a);
+        void SetClearColour(const glm::vec4 cc);
         void SetWireFrameMode(bool enabled);
-        void SetViewport(int x, int y, int w, int h);
+        void SetViewport(const glm::ivec4 dimensions);
         void Submit(std::unique_ptr<graphics::rendercommands::RenderCommand> rc);
         
         // Execute submitted RenderCommands int the order they were received.

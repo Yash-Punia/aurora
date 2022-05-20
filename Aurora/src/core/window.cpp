@@ -23,9 +23,10 @@ namespace aurora::core
         wMin = 320;
         hMin = 180;
         flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-        ccR = 0.263;
-        ccG = 0.224;
-        ccB = 0.51;
+        clearColour = glm::vec3(
+            0.263,
+            0.224,
+            0.51);
     }
 
     Window::Window() : mWindow(nullptr) {}
@@ -70,7 +71,9 @@ namespace aurora::core
         // Engine::Instance().GetRenderManager().SetClearColour(props.ccR, props.ccG, props.ccB, 1.f);
 
         mFramebuffer = std::make_shared<graphics::Framebuffer>(props.w, props.h);
-        mFramebuffer->SetClearColour(props.ccR, props.ccG, props.ccB, 1.f);
+        
+        glm::vec4 cc { props.clearColour.r, props.clearColour.g, props.clearColour.b, 1.f };
+        mFramebuffer->SetClearColour(cc);
 
         mImguiWindow.Create(props.imguiProps);
 
@@ -141,9 +144,11 @@ namespace aurora::core
         SDL_GL_SwapWindow(mWindow);
     }
 
-    void Window::GetSize(int &w, int &h)
+    glm::ivec2 Window::GetSize()
     {
+        int w, h;
         SDL_GetWindowSize(mWindow, &w, &h);
+        return glm::ivec2(w, h);
     }
 
 } // namespace aurora::core

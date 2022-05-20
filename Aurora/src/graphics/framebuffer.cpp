@@ -10,12 +10,8 @@ namespace aurora::graphics
         : mFbo(0)
         , mTextureId(0)
         , mRenderbufferId(0)
-        , mWidth(width)
-        , mHeight(height)
-        , mCCR(1)
-        , mCCG(1)
-        , mCCB(1)
-        , mCCA(1)
+        , mSize({ width, height })
+        , mClearColour(1.f)
         
     
     {
@@ -30,7 +26,7 @@ namespace aurora::graphics
          */
         glGenTextures(1, &mTextureId); AURORA_CHECK_GL_ERROR;
         glBindTexture(GL_TEXTURE_2D, mTextureId); AURORA_CHECK_GL_ERROR;
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); AURORA_CHECK_GL_ERROR;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mSize.x, mSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); AURORA_CHECK_GL_ERROR;
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); AURORA_CHECK_GL_ERROR;
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); AURORA_CHECK_GL_ERROR;
         glBindTexture(GL_TEXTURE_2D, 0); AURORA_CHECK_GL_ERROR;
@@ -42,7 +38,7 @@ namespace aurora::graphics
 
         glGenRenderbuffers(1, &mRenderbufferId); AURORA_CHECK_GL_ERROR;
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferId); AURORA_CHECK_GL_ERROR;
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWidth, mHeight); AURORA_CHECK_GL_ERROR;
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mSize.x, mSize.y); AURORA_CHECK_GL_ERROR;
         glBindRenderbuffer(GL_RENDERBUFFER, 0); AURORA_CHECK_GL_ERROR;
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mRenderbufferId); AURORA_CHECK_GL_ERROR;
 

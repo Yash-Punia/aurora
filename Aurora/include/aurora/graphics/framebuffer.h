@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+#include "external/glm/glm.hpp"
+
 namespace aurora::graphics
 {
     class Framebuffer
@@ -13,16 +15,16 @@ namespace aurora::graphics
         inline uint32_t GetFbo() { return mFbo; }
         inline uint32_t GetTextureId() { return mTextureId;}
         inline uint32_t GetRenderbufferId() { return mRenderbufferId; }
-        inline void GetSize(uint32_t& w, uint32_t&h ) { w = mWidth; h = mHeight; }
-        inline void GetClearColour(float& r, float& g, float& b, float& a) { r = mCCR; g = mCCG; b = mCCB; a = mCCA; }
-        inline void SetClearColour(float r, float g, float b, float a) { mCCR = r; mCCG = g; mCCB = b; mCCA = a; }
+        inline const glm::ivec2& GetSize() { return mSize; }
+        inline const glm::vec4& GetClearColour() { return mClearColour; }
+        inline void SetClearColour(glm::vec4& cc) { mClearColour = cc; }
 
     private:
         uint32_t mFbo;
         uint32_t mTextureId;
         uint32_t mRenderbufferId;
-        uint32_t mWidth, mHeight;
+        glm::ivec2 mSize;
 
-        float mCCR, mCCG, mCCB, mCCA;
+        glm::vec4 mClearColour;
     };
 }
