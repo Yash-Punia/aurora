@@ -25,7 +25,7 @@ namespace aurora::managers
         glEnable(GL_BLEND);                                // Blend allows us to see through alpha (transparent objects)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Sets the function for blend
 
-        SetClearColour(0.263, 0.224, 0.51, 1); // Default color
+        SetClearColour({0.263, 0.224, 0.51, 1}); // Default color
     }
 
     void RenderManager::Shutdown()
@@ -36,15 +36,15 @@ namespace aurora::managers
         }
     }
 
-    void RenderManager::SetViewport(int x, int y, int w, int h)
+    void RenderManager::SetViewport(const glm::ivec4 dimensions)
     {
-        glViewport(x, y, w, h);
+        glViewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
         AURORA_CHECK_GL_ERROR;
     }
 
-    void RenderManager::SetClearColour(float r, float g, float b, float a)
+    void RenderManager::SetClearColour(glm::vec4 cc)
     {
-        glClearColor(r, g, b, a);
+        glClearColor(cc.r, cc.g, cc.b, cc.a);
         AURORA_CHECK_GL_ERROR;
     }
 
@@ -92,13 +92,10 @@ namespace aurora::managers
     {
         mFramebuffers.push(framebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->GetFbo());
-        uint32_t w, h;
-        framebuffer->GetSize(w, h);
-        SetViewport(0, 0, w, h);
+        SetViewport({0, 0, framebuffer->GetSize().x, framebuffer->GetSize().y});
 
-        float r, g, b, a;
-        framebuffer->GetClearColour(r, g, b, a);
-        glClearColor(r, g, b, a);
+        auto cc = framebuffer->GetClearColour();
+        glClearColor(cc.r, cc.g, cc.b, cc.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -112,17 +109,13 @@ namespace aurora::managers
             {
                 auto nextFb = mFramebuffers.top();
                 glBindFramebuffer(GL_FRAMEBUFFER, nextFb->GetFbo()); AURORA_CHECK_GL_ERROR;
-                uint32_t w, h;
-                nextFb->GetSize(w, h);
-                SetViewport(0, 0, w, h);
+                SetViewport({0, 0, nextFb->GetSize().x, nextFb->GetSize().y});
             }
             else
             {
                 glBindFramebuffer(GL_FRAMEBUFFER, 0); AURORA_CHECK_GL_ERROR;
                 auto &window = Engine::Instance().GetWindow();
-                int w, h;
-                window.GetSize(w, h);
-                SetViewport(0, 0, w, h);
+                SetViewport({0, 0, window.GetSize().x, window.GetSize().y});
             }
         }
     }

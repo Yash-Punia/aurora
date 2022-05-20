@@ -6,6 +6,8 @@
 #include <string>
 #include <memory>
 
+#include "external/glm/glm.hpp"
+
 namespace aurora::graphics
 {
     class Framebuffer;
@@ -23,7 +25,7 @@ namespace aurora::core
         int x, y, w, h;
         int wMin, hMin;
         int flags;
-        float ccR, ccG, ccB;
+        glm::vec3 clearColour;
         ImguiWindowProperties imguiProps;
 
         WindowProperties();
@@ -45,7 +47,7 @@ namespace aurora::core
         void BeginRender();
         void EndRender();
 
-        void GetSize(int& w, int& h);
+        glm::ivec2 GetSize();
 
         inline SDL_Window* GetSDLWindow() { return mWindow; }
         inline SDL_GLContext GetGLContext() { return mGLContext; }

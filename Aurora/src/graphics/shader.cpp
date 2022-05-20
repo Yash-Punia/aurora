@@ -1,7 +1,10 @@
 #include "graphics/shader.h"
+#include "graphics/helpers.h"
 #include "log.h"
 
 #include "glad/glad.h"
+
+#include "glm/gtc/type_ptr.hpp"
 
 namespace aurora::graphics
 {
@@ -102,10 +105,20 @@ namespace aurora::graphics
         glUniform2f(GetUniformLocation(name), val1, val2);
     }
 
+    void Shader::SetUniformFloat2(const std::string& name, const glm::vec2& val)
+	{
+		SetUniformFloat2(name, val.x, val.y);
+	}
+
     void Shader::SetUniformFloat3(const std::string& name, float val1, float val2, float val3)
     {
         glUseProgram(mProgramId);
         glUniform3f(GetUniformLocation(name), val1, val2, val3);
+    }
+
+    void Shader::SetUniformFloat3(const std::string& name, const glm::vec3& val)
+	{
+		SetUniformFloat3(name, val.x, val.y, val.z);
     }
 
     void Shader::SetUniformFloat4(const std::string& name, float val1, float val2, float val3, float val4)
@@ -113,6 +126,25 @@ namespace aurora::graphics
         glUseProgram(mProgramId);
         glUniform4f(GetUniformLocation(name), val1, val2, val3, val4);
     }
+
+    void Shader::SetUniformFloat4(const std::string& name, const glm::vec4& val)
+	{
+		SetUniformFloat4(name, val.x, val.y, val.z, val.w);
+	}
+
+	void Shader::SetUniformMat3(const std::string& name, const glm::mat3& mat)
+	{
+		glUseProgram(mProgramId);
+        AURORA_CHECK_GL_ERROR;
+		glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat)); AURORA_CHECK_GL_ERROR;
+	}
+
+	void Shader::SetUniformMat4(const std::string& name, const glm::mat4& mat)
+	{
+		glUseProgram(mProgramId);
+        AURORA_CHECK_GL_ERROR;
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat)); AURORA_CHECK_GL_ERROR;
+	}
 
     int Shader::GetUniformLocation(const std::string& name) {
         auto it = mUniformLocations.find(name);
