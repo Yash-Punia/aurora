@@ -98,8 +98,8 @@ project "Aurora"
 
 
 --Main editor application
-project "AuroraEditor"
-    location "AuroraEditor"
+project "PongV1"
+    location "PongV1"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
@@ -166,3 +166,72 @@ project "AuroraEditor"
         runtime "Release"
         symbols "off"
         optimize "on"
+
+        project "AuroraEditor"
+        location "AuroraEditor"
+        kind "ConsoleApp"
+        language "C++"
+        cppdialect "C++17"
+        staticruntime "on"
+        links "Aurora"
+    
+        targetdir(tdir)
+        objdir(odir)
+    
+        files 
+        {
+            "%{prj.name}/src/**.h",
+            "%{prj.name}/src/**.cpp"
+        }
+    
+        sysincludedirs
+        {
+            "Aurora/include",
+            "%{prj.name}/src",
+            "%{externals.spdlog}/include"
+        }
+    
+        flags
+        {
+            "FatalWarnings"
+        }
+    
+        filter {"system:windows", "configurations:*"}
+            systemversion "latest"
+    
+            defines
+            {
+                "AURORA_PLATFORM_WINDOWS"
+            }
+    
+            --To run application on windows, provides the appropriate library to support the run
+            libdirs
+            {
+                "%{externals.sdl2}/lib"
+            }
+    
+            --Links the dependencies from external
+            links
+            {
+                "SDL2",
+                "glad"
+            }
+    
+        --Debug config generates redundant files with more info
+        filter "configurations:Debug"
+            defines
+            {
+                "AURORA_CONFIG_DEBUG"
+            }
+            runtime "Debug"
+            symbols "on"
+    
+        --Release config generates only relevant files with optimized code
+        filter "configurations:Release"
+            defines
+            {
+                "AURORA_CONFIG_RELEASE"
+            }
+            runtime "Release"
+            symbols "off"
+            optimize "on"
