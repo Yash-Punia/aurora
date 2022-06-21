@@ -12,7 +12,7 @@ public:
         , mVelocity(0.f)
     {}
 
-    void SetVelocity(glm::vec2& vel) { mVelocity = vel; }
+    void SetVelocity(const glm::vec2& vel) { mVelocity = vel; }
     const glm::vec2& GetVelocity() const { return mVelocity; }
     void FlipVelX() { mVelocity.x *= -1; }
     void FlipVelY() { mVelocity.y *= -1; }

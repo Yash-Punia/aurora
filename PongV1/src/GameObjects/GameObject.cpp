@@ -3,6 +3,13 @@
 #include "aurora/engine.h"
 #include "external/glm/gtc/matrix_transform.hpp"
 
+void GameObject::Update()
+{
+	static int frames = 0;
+	mShader->SetUniformFloat("iTime", frames * 0.01f);
+	frames++;
+}
+
 void GameObject::Render()
 {
     glm::mat4 model = glm::mat4(1.f);

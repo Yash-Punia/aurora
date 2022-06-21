@@ -23,7 +23,7 @@ public:
     const glm::vec2& GetPos() const { return mPos; }
     const glm::vec2& GetSize() const { return mSize; }
 
-    void Update() {};
+    void Update();
     void Render();
 
 private:
